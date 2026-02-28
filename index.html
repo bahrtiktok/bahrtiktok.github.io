@@ -3,143 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Flum Tik · настоящий TikTok</title>
-    
-    <!-- Font Awesome для иконок -->
+    <title>Flum Tik</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <!-- CSS стили -->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/feed.css">
-    <link rel="stylesheet" href="css/profile.css">
-    <link rel="stylesheet" href="css/upload.css">
-    <link rel="stylesheet" href="css/modals.css">
-    <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
-    <!-- Корневой элемент, куда будет монтироваться приложение -->
     <div id="app"></div>
 
-    <!-- Шаблон для главной страницы (будет заполняться скриптами) -->
-    <template id="app-template">
-        <div class="tiktok-app">
-            <!-- Шапка -->
-            <div class="header" id="header">
-                <div class="header-left">
-                    <span class="tab active" data-tab="home">Главная</span>
-                    <span class="tab" data-tab="friends">Друзья</span>
-                </div>
-                <div class="header-right">
-                    <i class="fa-solid fa-magnifying-glass" id="searchBtn"></i>
-                    <i class="fa-regular fa-circle-check" id="notificationsBtn"></i>
-                </div>
-            </div>
-
-            <!-- Контейнер для страниц -->
-            <div class="pages-container" id="pagesContainer">
-                <!-- Страницы будут загружаться сюда динамически -->
-            </div>
-
-            <!-- Нижняя навигация -->
-            <div class="bottom-nav" id="bottomNav">
-                <div class="nav-item active" data-page="feed">
-                    <i class="fa-solid fa-house"></i>
-                    <span class="label">Главная</span>
-                </div>
-                <div class="nav-item" data-page="discover">
-                    <i class="fa-solid fa-compass"></i>
-                    <span class="label">Открыть</span>
-                </div>
-                <div class="nav-item plus-button" data-page="upload">
-                    <i class="fa-solid fa-plus"></i>
-                </div>
-                <div class="nav-item" data-page="inbox">
-                    <i class="fa-regular fa-envelope"></i>
-                    <span class="label">Входящие</span>
-                </div>
-                <div class="nav-item" data-page="profile" id="navProfile">
-                    <i class="fa-regular fa-user"></i>
-                    <span class="label">Я</span>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <!-- Шаблон модалки комментариев -->
-    <template id="comment-modal-template">
-        <div class="comment-modal" id="commentModal">
-            <div class="comment-sheet">
-                <div class="comment-header">
-                    <h3>Комментарии (<span id="commentCountSpan">0</span>)</h3>
-                    <span class="close-comments" id="closeComments">&times;</span>
-                </div>
-                <div class="comment-list" id="commentList"></div>
-                <div class="comment-input-area">
-                    <input type="text" class="comment-input" placeholder="Написать комментарий..." id="commentInput">
-                    <button class="comment-send" id="sendComment">Отправить</button>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <!-- Шаблон модалки авторизации -->
-    <template id="auth-modal-template">
-        <div class="auth-modal" id="authModal">
-            <div class="auth-sheet">
-                <div class="auth-header">
-                    <h2>Вход в Flum Tik</h2>
-                    <span class="close-auth" id="closeAuth">&times;</span>
-                </div>
-                <div class="auth-content">
-                    <div class="auth-avatar-preview" id="avatarPreview">
-                        <img src="https://i.pravatar.cc/150?u=default" alt="avatar" id="previewImg">
-                    </div>
-                    
-                    <div class="auth-field">
-                        <label>Имя пользователя</label>
-                        <input type="text" id="authUsername" placeholder="например: flum_user" maxlength="30">
-                    </div>
-                    
-                    <div class="auth-field">
-                        <label>Загрузить аватар</label>
-                        <div class="auth-upload-area" id="authUploadArea">
-                            <i class="fa-solid fa-cloud-upload-alt"></i>
-                            <span>Нажмите чтобы выбрать фото</span>
-                        </div>
-                        <input type="file" id="authAvatarFile" accept="image/*" hidden>
-                    </div>
-                    
-                    <div class="auth-buttons">
-                        <button class="auth-btn login-btn" id="loginBtn">Войти</button>
-                        <button class="auth-btn register-btn" id="registerBtn">Зарегистрироваться</button>
-                    </div>
-                    
-                    <div class="auth-hint">
-                        * Если пользователь не существует, он будет создан
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <!-- Yet.js для загрузки файлов (будет добавлен скриптом) -->
+    <!-- Подключаем только базовые скрипты -->
     <script>
-        // Глобальная конфигурация
         window.FLUM_CONFIG = {
             firebaseUrl: 'https://flum-2-default-rtdb.firebaseio.com/',
             yyfUrl: 'https://yyf.mubilop.com'
         };
     </script>
-
-    <!-- Скрипты будут загружаться через app.js -->
     <script src="js/firebase.js"></script>
     <script src="js/yet-integration.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/feed.js"></script>
-    <script src="js/profile.js"></script>
-    <script src="js/upload.js"></script>
-    <script src="js/comments.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
