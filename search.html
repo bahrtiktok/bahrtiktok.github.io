@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Поиск · Flum Tik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .search-page {
+            padding: 20px;
+        }
+        
+        .search-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-header i {
+            font-size: 22px;
+            cursor: pointer;
+        }
+        
+        .search-box {
+            flex: 1;
+            background: #222;
+            border-radius: 30px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+        }
+        
+        .search-tabs {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid #222;
+            margin-bottom: 20px;
+        }
+        
+        .search-tab {
+            padding: 10px 0;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .search-tab.active {
+            color: white;
+            border-bottom-color: #ff3b5c;
+        }
+        
+        .search-results {
+            min-height: 200px;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+        }
+        
+        .result-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .result-info {
+            flex: 1;
+        }
+        
+        .result-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .result-desc {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .result-video {
+            width: 60px;
+            height: 106px;
+            background: #333;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="tiktok-app">
+        <div class="search-page">
+            <div class="search-header">
+                <i class="fa-solid fa-arrow-left" onclick="history.back()"></i>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Поиск" id="searchInput" autofocus>
+                </div>
+            </div>
+
+            <div class="search-tabs">
+                <div class="search-tab active" data-tab="top">Лучшее</div>
+                <div class="search-tab" data-tab="users">Пользователи</div>
+                <div class="search-tab" data-tab="videos">Видео</div>
+                <div class="search-tab" data-tab="hashtags">Хештеги</div>
+            </div>
+
+            <div class="search-results" id="searchResults">
+                <!-- Результаты будут загружаться сюда -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.FLUM_CONFIG = {
+            firebaseUrl: 'https://flum-2-default-rtdb.firebaseio.com/',
+            yyfUrl: 'https://yyf.mubilop.com'
+        };
+    </script>
+    <script src="js/firebase.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const resultsDiv = document.getElementById('searchResults');
+            const tabs = document.querySelectorAll('.search-tab');
+            
+            let currentTab = 'top';
+            let searchTimeout;
+
+            // Переключение табов
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentTab = tab.dataset.tab;
+                    performSearch(searchInput.value);
+                });
+            });
+
+            // Поиск с debounce
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                const query = e.target.value;
+                
+                if (query.length < 2) {
+                    showEmptyState();
+                    return;
+                }
+
+                searchTimeout = setTimeout(() => {
+                    performSearch(query);
+                }, 300);
+            });
+
+            async function performSearch(query) {
+                if (!query || query.length < 2) return;
+
+                resultsDiv.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">Поиск...</div>';
+
+                try {
+                    let results = [];
+
+                    switch (currentTab) {
+                        case 'users':
+                            results = await window.flumDb.searchUsers(query);
+                            renderUsers(results);
+                            break;
+                        case 'videos':
+                            results = await window.flumDb.searchVideos(query);
+                            renderVideos(results);
+                            break;
+                        default:
+                            // Ищем и пользователей и видео
+                            const [users, videos] = await Promise.all([
+                                window.flumDb.searchUsers(query),
+                                window.flumDb.searchVideos(query)
+                            ]);
+                            renderMixed(users, videos);
+                    }
+                } catch (error) {
+                    console.error('Search failed:', error);
+                    resultsDiv.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">Ошибка поиска</div>';
+                }
+            }
+
+            function renderUsers(users) {
+                if (users.length === 0) {
+                    resultsDiv.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">Пользователи не найдены</div>';
+                    return;
+                }
+
+                resultsDiv.innerHTML = '';
+                users.forEach(user => {
+                    resultsDiv.innerHTML += `
+                        <div class="result-item" onclick="window.location.href='profile.html?userId=${user.id}'">
+                            <img class="result-avatar" src="${user.avatar}" loading="lazy">
+                            <div class="result-info">
+                                <div class="result-name">@${user.username}</div>
+                                <div class="result-desc">${user.followers || 0} подписчиков</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            function renderVideos(videos) {
+                if (videos.length === 0) {
+                    resultsDiv.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">Видео не найдены</div>';
+                    return;
+                }
+
+                resultsDiv.innerHTML = '';
+                videos.forEach(video => {
+                    resultsDiv.innerHTML += `
+                        <div class="result-item" onclick="window.location.href='feed.html?video=${video.id}'">
+                            <video class="result-video" src="${video.url}" muted></video>
+                            <div class="result-info">
+                                <div class="result-name">${video.caption || 'Без названия'}</div>
+                                <div class="result-desc">❤️ ${video.likes || 0} · 💬 ${video.comments || 0}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            function renderMixed(users, videos) {
+                if (users.length === 0 && videos.length === 0) {
+                    resultsDiv.innerHTML = '<div style="text-align:center; padding:40px; color:#888;">Ничего не найдено</div>';
+                    return;
+                }
+
+                resultsDiv.innerHTML = '';
+
+                if (users.length > 0) {
+                    resultsDiv.innerHTML += '<div style="font-weight:600; margin:10px 0;">Пользователи</div>';
+                    users.slice(0, 3).forEach(user => {
+                        resultsDiv.innerHTML += `
+                            <div class="result-item" onclick="window.location.href='profile.html?userId=${user.id}'">
+                                <img class="result-avatar" src="${user.avatar}" loading="lazy">
+                                <div class="result-info">
+                                    <div class="result-name">@${user.username}</div>
+                                    <div class="result-desc">${user.followers || 0} подписчиков</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                if (videos.length > 0) {
+                    resultsDiv.innerHTML += '<div style="font-weight:600; margin:15px 0 10px;">Видео</div>';
+                    videos.slice(0, 5).forEach(video => {
+                        resultsDiv.innerHTML += `
+                            <div class="result-item" onclick="window.location.href='feed.html?video=${video.id}'">
+                                <video class="result-video" src="${video.url}" muted></video>
+                                <div class="result-info">
+                                    <div class="result-name">${video.caption || 'Без названия'}</div>
+                                    <div class="result-desc">❤️ ${video.likes || 0} · 💬 ${video.comments || 0}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            function showEmptyState() {
+                resultsDiv.innerHTML = `
+                    <div style="text-align:center; padding:40px; color:#888;">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 48px; opacity:0.3; margin-bottom:20px;"></i>
+                        <p>Введите запрос для поиска</p>
+                    </div>
+                `;
+            }
+
+            showEmptyState();
+        });
+    </script>
+</body>
+</html>
