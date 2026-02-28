@@ -1,0 +1,568 @@
+/* upload.css - стили для страницы загрузки видео */
+
+/* Контейнер загрузки */
+.upload-container {
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px 16px 30px;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Заголовок */
+.upload-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, var(--primary), #ff8c5a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Область для перетаскивания файла */
+.upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 24px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    background: var(--bg-card);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: rgba(255, 59, 92, 0.05);
+}
+
+.upload-area.dragover {
+    border-color: var(--primary);
+    background: rgba(255, 59, 92, 0.1);
+    transform: scale(1.02);
+}
+
+.upload-area i {
+    font-size: 48px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    transition: color var(--transition-fast);
+}
+
+.upload-area:hover i {
+    color: var(--primary);
+}
+
+.upload-area-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.upload-area-hint {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.upload-area-hint i {
+    font-size: 14px;
+    margin: 0 4px;
+}
+
+/* Превью видео */
+.upload-preview {
+    margin-bottom: 24px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-card);
+    position: relative;
+    aspect-ratio: 9/16;
+    max-height: 400px;
+    width: 100%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+.upload-preview video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.upload-preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(0deg, 
+        rgba(0,0,0,0.6) 0%, 
+        transparent 50%,
+        rgba(0,0,0,0.3) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.upload-preview-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--primary);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(4px);
+}
+
+.upload-preview-time {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    z-index: 2;
+}
+
+/* Прогресс загрузки */
+.upload-progress {
+    margin-bottom: 24px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 16px;
+    display: none;
+}
+
+.upload-progress.active {
+    display: block;
+}
+
+.upload-progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.upload-progress-bar {
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.upload-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #ff8c5a);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 3px;
+}
+
+.upload-progress-status {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+/* Поля ввода */
+.upload-input-group {
+    margin-bottom: 20px;
+}
+
+.upload-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.upload-label i {
+    margin-right: 8px;
+    color: var(--primary);
+}
+
+.upload-input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: var(--text-primary);
+    font-size: 16px;
+    transition: all var(--transition-fast);
+}
+
+.upload-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(255, 59, 92, 0.2);
+}
+
+.upload-input::placeholder {
+    color: var(--text-muted);
+}
+
+.upload-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Выбор музыки */
+.upload-music-selector {
+    background: var(--bg-card);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.upload-music-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.upload-music-header:active {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-music-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+}
+
+.upload-music-info {
+    flex: 1;
+}
+
+.upload-music-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.upload-music-artist {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.upload-music-arrow {
+    color: var(--text-secondary);
+    transition: transform var(--transition-fast);
+}
+
+.upload-music-selector.expanded .upload-music-arrow {
+    transform: rotate(180deg);
+}
+
+.upload-music-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-normal);
+    border-top: 1px solid transparent;
+}
+
+.upload-music-selector.expanded .upload-music-list {
+    max-height: 300px;
+    border-top-color: var(--border-color);
+}
+
+.upload-music-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.upload-music-item:last-child {
+    border-bottom: none;
+}
+
+.upload-music-item:active {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-music-item.selected {
+    background: rgba(255, 59, 92, 0.1);
+}
+
+.upload-music-item.selected .upload-music-check {
+    color: var(--primary);
+}
+
+.upload-music-check {
+    width: 24px;
+    color: var(--text-muted);
+}
+
+/* Настройки приватности */
+.upload-privacy {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+}
+
+.upload-privacy-title {
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-privacy-options {
+    display: flex;
+    gap: 16px;
+}
+
+.upload-privacy-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg-dark);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.upload-privacy-option.selected {
+    border-color: var(--primary);
+    background: rgba(255, 59, 92, 0.1);
+}
+
+.upload-privacy-option:active {
+    transform: scale(0.98);
+}
+
+.upload-privacy-option i {
+    font-size: 18px;
+    color: var(--text-secondary);
+}
+
+.upload-privacy-option.selected i {
+    color: var(--primary);
+}
+
+/* Кнопка публикации */
+.upload-publish-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary), #ff8c5a);
+    border: none;
+    border-radius: 30px;
+    padding: 18px;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-top: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(255, 59, 92, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-publish-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(255, 59, 92, 0.4);
+}
+
+.upload-publish-btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(0.5);
+}
+
+.upload-publish-btn.loading {
+    color: transparent;
+}
+
+.upload-publish-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Уведомления */
+.upload-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
+    background: var(--bg-elevated);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    transform: translateY(150%);
+    transition: transform var(--transition-normal);
+    border-left: 4px solid var(--primary);
+}
+
+.upload-notification.show {
+    transform: translateY(0);
+}
+
+.upload-notification.success {
+    border-left-color: #4caf50;
+}
+
+.upload-notification.error {
+    border-left-color: #f44336;
+}
+
+.upload-notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.upload-notification-icon {
+    font-size: 24px;
+}
+
+.upload-notification.success .upload-notification-icon {
+    color: #4caf50;
+}
+
+.upload-notification.error .upload-notification-icon {
+    color: #f44336;
+}
+
+.upload-notification-text {
+    flex: 1;
+    font-size: 14px;
+}
+
+.upload-notification-close {
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+}
+
+/* Индикатор выбранного файла */
+.upload-file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.upload-file-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.upload-file-details {
+    flex: 1;
+}
+
+.upload-file-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.upload-file-size {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.upload-file-remove {
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    transition: color var(--transition-fast);
+}
+
+.upload-file-remove:active {
+    color: var(--primary);
+}
+
+/* Адаптивность */
+@media (min-width: 768px) {
+    .upload-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .upload-area {
+        padding: 60px 40px;
+    }
+    
+    .upload-preview {
+        max-height: 500px;
+    }
+    
+    .upload-notification {
+        max-width: 400px;
+        left: auto;
+        right: 20px;
+    }
+}
+
+/* Темная тема (уже в main.css, но добавим специфичное) */
+@media (prefers-color-scheme: dark) {
+    .upload-area {
+        background: var(--bg-card);
+    }
+    
+    .upload-music-item:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+}
