@@ -1,0 +1,424 @@
+/* feed.css - стили для ленты видео */
+
+/* Контейнер ленты */
+.feed-container {
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    background-color: var(--bg-dark);
+    position: relative;
+}
+
+.feed-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Карточка видео */
+.video-card {
+    height: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 16px 20px;
+    color: var(--text-primary);
+    background: var(--bg-dark);
+    overflow: hidden;
+}
+
+/* Видео фон */
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: auto;
+    z-index: 0;
+    background-color: var(--bg-dark);
+}
+
+/* Затемнение для читаемости текста */
+.video-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        0deg,
+        rgba(0,0,0,0.6) 0%,
+        rgba(0,0,0,0.2) 40%,
+        rgba(0,0,0,0.3) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Информация о видео */
+.video-info {
+    position: relative;
+    z-index: 2;
+    max-width: 70%;
+    pointer-events: none;
+    margin-bottom: 40px;
+    transform: translateY(0);
+    transition: transform var(--transition-normal);
+}
+
+.video-info * {
+    pointer-events: none;
+}
+
+/* Строка с пользователем */
+.user-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0;
+}
+
+.user-row:active {
+    opacity: 0.8;
+}
+
+/* Аватар */
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--text-primary);
+    object-fit: cover;
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Имя пользователя */
+.username {
+    font-weight: 700;
+    font-size: 16px;
+    text-shadow: var(--text-shadow);
+}
+
+/* Галочка верификации */
+.verified {
+    color: #3897f0;
+    font-size: 14px;
+    margin-left: 2px;
+}
+
+/* Badge LIVE */
+.live-badge {
+    background: var(--primary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Подпись к видео */
+.caption {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    text-shadow: var(--text-shadow);
+    max-width: 90%;
+    word-break: break-word;
+}
+
+/* Строка с музыкой */
+.music-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    opacity: 0.9;
+    text-shadow: var(--text-shadow);
+    margin-bottom: 4px;
+}
+
+.music-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+}
+
+.music-icon i {
+    color: var(--text-primary);
+}
+
+/* Панель действий (справа) */
+.action-bar {
+    position: absolute;
+    right: 12px;
+    bottom: 120px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    pointer-events: auto;
+}
+
+/* Элемент действия */
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: var(--text-shadow);
+}
+
+.action-item i {
+    font-size: 32px;
+    filter: drop-shadow(var(--shadow-md));
+    cursor: pointer;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.action-item i:active {
+    transform: scale(1.15);
+}
+
+.action-item .count {
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: var(--text-shadow);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    padding: 2px 6px;
+    border-radius: 12px;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Состояния для лайка */
+.action-item .fa-heart.liked {
+    font-weight: 900;
+    color: var(--primary);
+}
+
+/* Анимация лайка */
+@keyframes likePop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.action-item .fa-heart.liked:active {
+    animation: likePop 0.3s ease;
+}
+
+/* Состояния для сохранения */
+.action-item .fa-bookmark.saved {
+    font-weight: 900;
+    color: #ffc107;
+}
+
+/* Оверлей сердечка при двойном тапе */
+.heart-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    color: var(--primary);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    filter: drop-shadow(var(--shadow-lg));
+}
+
+.heart-overlay.show {
+    animation: heartPop 0.5s ease forwards;
+}
+
+/* Прогресс-бар видео (будет добавлен позже) */
+.video-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 4;
+}
+
+.video-progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+/* Индикатор звука */
+.volume-indicator {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 4;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+}
+
+.volume-indicator.visible {
+    opacity: 1;
+}
+
+.volume-indicator i {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 380px) {
+    .video-info {
+        max-width: 65%;
+    }
+    
+    .action-bar {
+        right: 8px;
+        gap: 12px;
+    }
+    
+    .action-item i {
+        font-size: 28px;
+    }
+    
+    .action-item .count {
+        font-size: 11px;
+        padding: 2px 4px;
+    }
+    
+    .avatar {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .username {
+        font-size: 14px;
+    }
+}
+
+/* Режим "картинка в картинке" (если видео свернуто) */
+.video-card.pip-mode {
+    opacity: 0.5;
+    transition: opacity var(--transition-normal);
+}
+
+/* Скелетон загрузки */
+.video-card.skeleton {
+    background: linear-gradient(90deg, 
+        var(--bg-card) 25%, 
+        var(--bg-elevated) 50%, 
+        var(--bg-card) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Индикатор новой загрузки */
+.new-video-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 5;
+    box-shadow: var(--shadow-md);
+    animation: pulse 2s infinite;
+}
+
+/* Стили для кнопки подписки на карточке */
+.follow-btn-card {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background-color var(--transition-fast);
+}
+
+.follow-btn-card.following {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+}
+
+.follow-btn-card:active {
+    transform: scale(0.95);
+}
+
+/* Подсказки для действий */
+.action-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.action-item:hover .action-tooltip {
+    opacity: 1;
+}
+
+/* Для тач-устройств убираем ховеры */
+@media (hover: none) {
+    .action-item:hover .action-tooltip {
+        opacity: 0;
+    }
+}
